@@ -25,10 +25,14 @@ RUN apt-get install -y python3 python3-pip
 # Install PySpark
 RUN pip3 install pyspark
 
+# Download and install Hadoop AWS dependencies
+RUN curl -fSL "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.0/hadoop-aws-3.2.0.jar" -o /opt/spark/jars/hadoop-aws-3.2.0.jar
+RUN curl -fSL "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.534/aws-java-sdk-bundle-1.11.534.jar" -o /opt/spark/jars/aws-java-sdk-bundle-1.11.534.jar
+
 # Copy your application code to the Docker image
 COPY . /app
 
 WORKDIR /app
 
 # Set the entry point
-ENTRYPOINT ["spark-submit", "bigmartmain.py"]
+ENTRYPOINT ["spark-submit",  "--packages", "org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.534","bigmartmain.py"]
