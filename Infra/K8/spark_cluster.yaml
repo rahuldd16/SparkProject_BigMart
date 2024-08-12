@@ -1,0 +1,26 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: bigmart-pyspark-app
+  namespace: spark
+spec:
+  type: Python
+  mode: cluster
+  image: rahuldd16/bigmart-pyspark-app:latest
+  imagePullPolicy: Always
+  mainApplicationFile: local:///app/bigmartmain.py
+  sparkVersion: 3.2.0
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+  driver:
+    cores: 1
+    memory: 512m
+    serviceAccount: spark
+  executor:
+    cores: 1
+    instances: 2
+    memory: 512m
